@@ -40,14 +40,36 @@ const calculateGuessTime = (password) => {
     }
 
     // Simulate a brute-force attack by generating variations of the password
-    // For simplicity, let's just consider variations based on lowercase letters and digits
-    const bruteForceTime = Math.pow(36, password.length) / 1e6; // Assuming 1 million guesses per second
+    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*()';
+    const totalCombinations = Math.pow(characters.length, password.length);
+    const guessesPerSecond = 1e6; // Adjust based on average hardware speed and attack method
+    const secondsToGuess = totalCombinations / guessesPerSecond;
 
-    return bruteForceTime;
+    return secondsToGuess;
 };
 
 const isCommonPassword = (password) => {
     return commonPasswords.includes(password.toLowerCase());
+};
+
+const formatGuessTime = (seconds) => {
+    const units = [
+        { label: 'years', value: 60 * 60 * 24 * 365 },
+        { label: 'months', value: 60 * 60 * 24 * 30 },
+        { label: 'days', value: 60 * 60 * 24 },
+        { label: 'hours', value: 60 * 60 },
+        { label: 'minutes', value: 60 },
+        { label: 'seconds', value: 1 },
+    ];
+
+    for (const unit of units) {
+        if (seconds >= unit.value) {
+            const unitTime = Math.floor(seconds / unit.value);
+            return `${unitTime} ${unit.label}`;
+        }
+    }
+
+    return `${seconds} seconds`;
 };
 
 const checkPasswordStrength = (req, res) => {
@@ -64,14 +86,13 @@ const checkPasswordStrength = (req, res) => {
     } else if (guessTime === 'Dictionary') {
         message = 'Your password is a common dictionary word. Please choose a stronger one.';
     } else {
-        message = `It would take approximately ${guessTime.toFixed(2)} seconds to guess your password.`;
+        const formattedTime = formatGuessTime(guessTime);
+        message = `It would take approximately ${formattedTime} to guess your password.`;
     }
 
     res.json({ message });
 };
 
-// Example usage:
-// const passwordStrength = checkPasswordStrength({ body: { password: 'YourPassword123!@#' } });
-// console.log(passwordStrength);
-
-module.exports = { checkPasswordStrength };
+module.exports = {
+    checkPasswordStrength
+};
