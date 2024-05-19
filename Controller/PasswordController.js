@@ -1,31 +1,19 @@
-const commonPasswords = [
-    'password', '123456', '123456789', '12345678', '12345', '1234567', '1234567890', 'letmein', '1234567', 'football',
-    'iloveyou', 'admin', 'welcome', 'monkey', 'login', 'abc123', 'starwars', '123123', 'dragon', 'passw0rd', 'master',
-    'hello', 'freedom', 'whatever', 'qazwsx', 'trustno1', '123qwe', 'killer', '1234', 'baseball', 'sunshine', 'superman',
-    'qwertyuiop', '123', 'shadow', '123456a', 'ashley', 'football', 'jesus', 'michael', 'ninja', 'mustang', 'cheese',
-    'shadow', 'root', 'welcome1', 'password1', 'qwerty123', 'letmein1', 'admin123', 'abc123', 'passw0rd', 'password123',
-    '1234567890', 'iloveyou1', 'adminadmin', '12345', '12345678910', 'princess', 'sunshine1', 'qwertyuiop1', '123456789a',
-    '123123123', 'password!', 'iloveyou!', '123456a', 'qwerty123!', 'password123!', 'admin123!', 'abc123!', '1234567890!',
-    'iloveyou1!', 'adminadmin!', '12345678910!', 'sunshine1!', 'qwertyuiop1!', '123456789a!', '123123123!', 'letmein!',
-    'princess1', 'princess1!', 'welcome1!', '12345678910', '12345!', 'admin!', 'shadow!', 'trustno1!', 'monkey1', 'password!',
-    'dragon1', 'passw0rd!', 'superman1', 'master1', 'hello1', 'freedom1', 'whatever1', '123qwe!', 'killer1', '1234!', 'baseball!',
-    'sunshine!', 'superman!', 'qwertyuiop!', '123!', 'shadow!', '123456a!', 'ashley!', 'football!', 'jesus!', 'michael!', 'ninja!',
-    'mustang!', 'cheese!', 'shadow!', 'root!', 'welcome1!', 'password1!', 'qwerty123!', 'letmein1!', 'admin123!', 'abc123!',
-    'passw0rd!', 'password123!', '1234567890!', 'iloveyou1!', 'adminadmin!', '12345!', '12345678910!', 'princess!', 'sunshine1!',
-    'qwertyuiop1!', '123456789a!', '123123123!', 'password!', 'iloveyou!', '123456a!', 'qwerty123!', 'password123!', 'admin123!',
-    'abc123!', '1234567890!', 'iloveyou1!', 'adminadmin!', '12345678910!', 'sunshine1!', 'qwertyuiop1!', '123456789a!', '123123123!',
-    'letmein!', 'princess1!', 'princess1!', 'welcome1!', '12345678910!', '12345!', 'admin!', 'shadow!', 'trustno1!', 'monkey1!',
-    'password!', 'dragon1!', 'passw0rd!', 'superman1!', 'master1!', 'hello1!', 'freedom1!', 'whatever1!', '123qwe!', 'killer1!',
-    '1234!', 'baseball!', 'sunshine!', 'superman!', 'qwertyuiop!', '123!', 'shadow!', '123456a!', 'ashley!', 'football!', 'jesus!',
-    'michael!', 'ninja!', 'mustang!', 'cheese!', 'shadow!', 'root!', 'welcome1!', 'password1!', 'qwerty123!', 'letmein1!', 'admin123!',
-    'abc123!', 'passw0rd!', 'password123!', '1234567890!', 'iloveyou1!', 'adminadmin!', '12345!', '12345678910!', 'princess!', 'sunshine1!',
-    'qwertyuiop1!', '123456789a!', '123123123!', 'password!', 'iloveyou!', '123456a!', 'qwerty123!', 'password123!', 'admin123!',
-    'abc123!', '1234567890!', 'iloveyou1!', 'adminadmin!', '12345678910!', 'sunshine1!', 'qwertyuiop1!', '123456789a!', '123123123!',
-    'letmein!', 'princess1!', 'princess1!', 'welcome1!', '12345678910!', '12345!', 'admin!', 'shadow!', 'trustno1!', 'monkey1!',
-    // Add more passwords as needed
-];
+const fs = require('fs');
+const path = require('path');
 
+// Function to read common passwords from file
+const readCommonPasswords = () => {
+    const filePath = path.join(__dirname, 'john-the-ripper.txt');
+    try {
+        const data = fs.readFileSync(filePath, 'utf8');
+        return data.split('\n').map(pwd => pwd.trim());
+    } catch (err) {
+        console.error('Error reading common passwords file:', err);
+        return [];
+    }
+};
 
+const commonPasswords = readCommonPasswords();
 
 const calculateGuessTime = (password) => {
     // Check if the password is in the common passwords list
@@ -34,7 +22,7 @@ const calculateGuessTime = (password) => {
     }
 
     // Simulate a dictionary attack
-    const dictionary = ['abc', 'cde', 'ghi', 'jkl', 'mno', 'pqr', 'stu']; // Add more common words as needed
+    const dictionary = ['abc', 'cde', 'ghi', 'jkl', 'mno', 'pqr', 'stu']; // Example dictionary words
     if (dictionary.includes(password.toLowerCase())) {
         return 'Dictionary'; // Indicate the password is a dictionary word
     }
@@ -82,7 +70,7 @@ const checkPasswordStrength = (req, res) => {
     let message;
 
     if (guessTime === 'Common') {
-        message = 'Your password is common and highly insecure. Please choose a stronger one.';
+        message = 'You will be under a dictionary attack. Please choose a stronger password.';
     } else if (guessTime === 'Dictionary') {
         message = 'Your password is a common dictionary word. Please choose a stronger one.';
     } else {
