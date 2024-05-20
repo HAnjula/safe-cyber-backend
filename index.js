@@ -12,9 +12,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const mongoURI = 'mongodb+srv://anjula:1234@cluster0.2fffkci.mongodb.net/safe-cyber?retryWrites=true&w=majority&appName=Cluster0';
-const port = 3000;
-
+const port = process.env.SERVER_PORT;
+const mongoURI = process.env.MONGO_URI;
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         app.listen(port, () => {
@@ -25,5 +24,5 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
         console.error('Error connecting to MongoDB:', error);
     });
 
-app.use('/api/v1/user', UserRouter);
+app.use('/api/user', UserRouter);
 app.use('/api/v1/password', PasswordRouter);

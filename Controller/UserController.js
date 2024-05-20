@@ -13,9 +13,20 @@ const registerUser=(req,res)=>{
         res.status(500).json(error);
     });
 }
+
+const getAllUsers = (req, res) => {
+    UserSchema.find()
+        .then(users => {
+            res.status(200).json(users);
+        })
+        .catch(error => {
+            res.status(500).json(error);
+        });
+};
 const loginUser=(req,res)=>{}
 
 module.exports={
+    getAllUsers,
     registerUser,
     loginUser
 }

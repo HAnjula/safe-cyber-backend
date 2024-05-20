@@ -6,5 +6,7 @@ const router=express.Router();
 
 
 router.post('/sign-up',userController.registerUser);
+// Route to get all users
+router.get('/', userController.getAllUsers);
 
 module.exports=router;
