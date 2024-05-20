@@ -12,8 +12,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const port = process.env.SERVER_PORT;
-const mongoURI = process.env.MONGO_URI;
+const mongoURI = 'mongodb+srv://anjula:1234@cluster0.2fffkci.mongodb.net/safe-cyber?retryWrites=true&w=majority&appName=Cluster0';
+const port = 3000;
 
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
