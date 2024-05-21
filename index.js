@@ -25,4 +25,4 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     });
 
 app.use('/api/user', UserRouter);
-app.use('/api/v1/password', PasswordRouter);
+app.use('/api/password', PasswordRouter);
